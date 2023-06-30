@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ChecklistAuto</string>
+    <string name="lists_screen_title">Lists</string>
+    <string name="no_lists_available_label">No lists available. Please click in the add button to add a list.</string>
+    <string name="button_add_list_label" translatable="false">+</string>
 </resources>

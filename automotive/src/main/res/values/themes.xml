@@ -1,4 +1,10 @@
 <resources>
 
-    <style name="Theme.ChecklistAuto" parent="android:Theme.Material.Light.DarkActionBar" />
+    <style name="Theme.ChecklistAuto" parent="android:Theme.Material.Light.NoActionBar.Fullscreen" />
+
+    <style name="ButtonAddList" parent="Theme.ChecklistAuto">
+        <item name="android:background">@drawable/oval_button_background</item>
+        <item name="android:layout_width">@dimen/bt_add_list_size</item>
+        <item name="android:layout_height">@dimen/bt_add_list_size</item>
+    </style>
 </resources>
