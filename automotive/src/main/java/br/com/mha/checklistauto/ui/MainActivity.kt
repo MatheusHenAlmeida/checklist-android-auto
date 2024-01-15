@@ -16,8 +16,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setupRecyclerView()
         setupAddListButtonAction()
         setContentView(binding.root)
+    }
+
+    private fun setupRecyclerView() {
+        val checkLists = viewModel.getAllCheckLists()
+
+        if (checkLists.isNotEmpty()) {
+            // TODO: Show recyclerview and load data into it
+        }
     }
 
     private fun setupAddListButtonAction() {
