@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Theme.ChecklistAuto" parent="android:Theme.Material.Light.NoActionBar.Fullscreen" />
+    <style name="Theme.ChecklistAuto" parent="Theme.AppCompat.Light.NoActionBar" />
 
     <style name="ButtonAddList" parent="Theme.ChecklistAuto">
         <item name="android:background">@drawable/oval_button_background</item>
