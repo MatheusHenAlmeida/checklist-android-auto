@@ -9,11 +9,23 @@
         android:id="@+id/tvCheckListName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="TextView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivDot"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TextView" />
+
+    <ImageView
+        android:id="@+id/ivDot"
+        android:layout_width="10dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvCheckListName"
+        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/tvCheckListName"
+        app:srcCompat="@drawable/ic_circle" />
 </androidx.constraintlayout.widget.ConstraintLayout>
