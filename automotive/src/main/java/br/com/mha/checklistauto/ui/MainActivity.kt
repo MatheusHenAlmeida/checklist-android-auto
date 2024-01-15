@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import br.com.mha.checklistauto.databinding.ActivityMainBinding
+import br.com.mha.checklistauto.ui.adapters.CheckListsAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -12,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModel()
+    private lateinit var checkListAdapter: CheckListsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +28,10 @@ class MainActivity : AppCompatActivity() {
         val checkLists = viewModel.getAllCheckLists()
 
         if (checkLists.isNotEmpty()) {
-            // TODO: Show recyclerview and load data into it
+            binding.tvNoListsAvailableLabel.isVisible = false
+            checkListAdapter = CheckListsAdapter(checkLists)
+            binding.rvCheckLists.adapter = checkListAdapter
+            binding.rvCheckLists.isVisible = true
         }
     }
 
