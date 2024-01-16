@@ -5,12 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import br.com.mha.checklistauto.R
 import br.com.mha.checklistauto.databinding.FragmentCheckListsBinding
 import br.com.mha.checklistauto.ui.checklists.adapters.CheckListsAdapter
 import br.com.mha.checklistauto.ui.checklists.dialogs.AddNewListDialog
+import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.CHECK_LIST_ID
+import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.NAME
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CheckListsFragment : Fragment() {
@@ -36,7 +39,11 @@ class CheckListsFragment : Fragment() {
             binding.tvNoListsAvailableLabel.isVisible = false
             checkListAdapter = CheckListsAdapter(
                 onCheckListSelectedListener = {
-                    findNavController().navigate(R.id.action_checkListsScreen_to_checkListItemsFragment)
+                    val bundle = bundleOf(
+                        CHECK_LIST_ID to it.id,
+                        NAME to it.name
+                    )
+                    findNavController().navigate(R.id.action_checkListsScreen_to_checkListItemsFragment, bundle)
                 }, checkLists)
             binding.rvCheckLists.adapter = checkListAdapter
             binding.rvCheckLists.isVisible = true

@@ -22,13 +22,19 @@ class CheckListItemsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCheckListItemsBinding.inflate(inflater, container, false)
+        setupListName()
         setupRecyclerView()
         return binding.root
     }
 
+    private fun setupListName() {
+        val name = arguments?.getString(NAME) ?: ""
+        binding.tvListNameTitle.text = name
+    }
+
     private fun setupRecyclerView() {
-        // TODO: Use a real id
-        val items = viewModel.getItemsFromList(1)
+        val checkListId = arguments?.getInt(CHECK_LIST_ID) ?: -1
+        val items = viewModel.getItemsFromList(checkListId)
 
         if (items.isNotEmpty()) {
             binding.tvNoItemsAvailableLabel.isVisible = false
@@ -36,5 +42,10 @@ class CheckListItemsFragment : Fragment() {
             binding.rvCheckListItems.adapter = checkListItemAdapter
             binding.rvCheckListItems.isVisible = true
         }
+    }
+
+    companion object {
+        const val CHECK_LIST_ID = "CHECK_LIST_ID"
+        const val NAME = "NAME"
     }
 }
