@@ -7,6 +7,7 @@ import br.com.mha.checklistauto.databinding.CheckListViewLayoutBinding
 import br.com.mha.checklistauto.domain.CheckList
 
 class CheckListsAdapter(
+    private val onCheckListSelectedListener: (CheckList) -> Unit,
     private val checkLists: List<CheckList>
 ): RecyclerView.Adapter<CheckListsAdapter.CheckListViewHolder>() {
 
@@ -26,5 +27,8 @@ class CheckListsAdapter(
         val checkList = checkLists[position]
 
         holder.binding.tvCheckListName.text = checkList.name
+        holder.binding.clCheckListContainer.setOnClickListener {
+            onCheckListSelectedListener.invoke(checkList)
+        }
     }
 }

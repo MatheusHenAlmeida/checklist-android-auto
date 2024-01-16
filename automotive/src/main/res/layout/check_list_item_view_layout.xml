@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/item_background"
-    android:id="@+id/clCheckListContainer"
     android:layout_marginHorizontal="10dp"
     android:layout_marginVertical="5dp"
     android:layout_width="match_parent"
@@ -11,7 +10,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/tvCheckListName"
+        android:id="@+id/tvItemDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -19,18 +18,19 @@
         android:layout_marginBottom="16dp"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivDot"
+        app:layout_constraintStart_toEndOf="@+id/ivDone"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="TextView" />
 
     <ImageView
-        android:id="@+id/ivDot"
-        android:layout_width="10dp"
+        android:id="@+id/ivDone"
+        android:layout_width="35dp"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvCheckListName"
+        app:layout_constraintBottom_toBottomOf="@+id/tvItemDescription"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvCheckListName"
-        app:srcCompat="@drawable/ic_circle" />
+        app:layout_constraintTop_toTopOf="@+id/tvItemDescription"
+        app:srcCompat="@drawable/baseline_check_circle_24"
+        app:tint="@color/app_round_buttons_color" />
 </androidx.constraintlayout.widget.ConstraintLayout>

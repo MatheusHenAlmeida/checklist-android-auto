@@ -8,8 +8,6 @@ class CheckListsViewModel(
 ): ViewModel() {
     fun getAllCheckLists() = checkListRepository.getAllCheckLists()
 
-    fun getItemsFromList(listId: Int) = checkListRepository.getAllItemsFromCheckList(listId)
-
     fun addNewList(listName: String) {
         checkListRepository.addNewList(listName)
     }

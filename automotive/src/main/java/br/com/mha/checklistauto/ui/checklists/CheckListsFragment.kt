@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
+import br.com.mha.checklistauto.R
 import br.com.mha.checklistauto.databinding.FragmentCheckListsBinding
 import br.com.mha.checklistauto.ui.checklists.adapters.CheckListsAdapter
 import br.com.mha.checklistauto.ui.checklists.dialogs.AddNewListDialog
@@ -32,7 +34,10 @@ class CheckListsFragment : Fragment() {
 
         if (checkLists.isNotEmpty()) {
             binding.tvNoListsAvailableLabel.isVisible = false
-            checkListAdapter = CheckListsAdapter(checkLists)
+            checkListAdapter = CheckListsAdapter(
+                onCheckListSelectedListener = {
+                    findNavController().navigate(R.id.action_checkListsScreen_to_checkListItemsFragment)
+                }, checkLists)
             binding.rvCheckLists.adapter = checkListAdapter
             binding.rvCheckLists.isVisible = true
         }
