@@ -49,13 +49,13 @@
     <ImageButton
         android:id="@+id/btBackToLists"
         style="@style/ButtonBackToLists"
-        android:layout_marginStart="32dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
-        android:src="@drawable/ic_back_arrow"
         android:contentDescription="test"
-        app:tint="@android:color/white"
+        android:src="@drawable/ic_back_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/btAddItem"
+        app:tint="@android:color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCheckListItems"
