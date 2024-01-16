@@ -1,4 +1,4 @@
-package br.com.mha.checklistauto.ui.dialogs
+package br.com.mha.checklistauto.ui.checklists.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater

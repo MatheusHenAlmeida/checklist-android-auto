@@ -1,4 +1,4 @@
-package br.com.mha.checklistauto.ui.adapters
+package br.com.mha.checklistauto.ui.checklists.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

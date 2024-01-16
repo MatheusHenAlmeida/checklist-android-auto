@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/checkListsScreen">
+
+    <fragment
+        android:id="@+id/checkListsScreen"
+        android:name="br.com.mha.checklistauto.ui.checklists.CheckListsFragment"
+        android:label="fragment_check_lists"
+        tools:layout="@layout/fragment_check_lists" />
+</navigation>
