@@ -40,7 +40,10 @@ class CheckListItemsFragment : Fragment() {
 
         if (items.isNotEmpty()) {
             binding.tvNoItemsAvailableLabel.isVisible = false
-            checkListItemAdapter = CheckListItemAdapter(requireContext(), items)
+            checkListItemAdapter = CheckListItemAdapter(requireContext(),
+                onCheckListItemClickListener = {
+                    viewModel.updateItemStatus(it.id, it.isDone.not())
+                }, items)
             binding.rvCheckListItems.adapter = checkListItemAdapter
             binding.rvCheckListItems.isVisible = true
         }
