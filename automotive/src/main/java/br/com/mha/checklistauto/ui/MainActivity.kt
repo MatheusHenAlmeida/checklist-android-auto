@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import br.com.mha.checklistauto.databinding.ActivityMainBinding
 import br.com.mha.checklistauto.ui.adapters.CheckListsAdapter
+import br.com.mha.checklistauto.ui.dialogs.AddNewListDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -37,11 +38,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAddListButtonAction() {
         binding.btAddList.setOnClickListener {
-            // TODO: Show dialog to insert a new list
+            AddNewListDialog(onAddNewListListener = {
+                viewModel.addNewList(it)
+            }).show(supportFragmentManager, ADD_NEW_LIST_TAG)
         }
     }
 
     companion object {
+        private const val ADD_NEW_LIST_TAG = "ADD_NEW_LIST_TAG"
+
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)

@@ -13,6 +13,10 @@ class CheckListRepository {
         return listOf(item1, item2, item3)
     }
 
+    fun addNewList(listName: String) {
+
+    }
+
     private val item1 = CheckListItem(1, "Item 1", false)
     private val item2 = CheckListItem(2, "Item 2", true)
     private val item3 = CheckListItem(3, "Item 1", false)

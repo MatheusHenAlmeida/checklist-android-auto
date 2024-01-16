@@ -3,4 +3,7 @@
     <string name="lists_screen_title">Lists</string>
     <string name="no_lists_available_label">No lists available. Please click in the add button to add a list.</string>
     <string name="button_add_list_label" translatable="false">+</string>
+    <string name="add_new_list_title">Add New List</string>
+    <string name="add_new_list_button_label">Add</string>
+    <string name="cancel_button_label">Cancel</string>
 </resources>
