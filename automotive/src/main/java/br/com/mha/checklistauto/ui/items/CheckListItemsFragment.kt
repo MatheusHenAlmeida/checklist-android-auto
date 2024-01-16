@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import br.com.mha.checklistauto.R
 import br.com.mha.checklistauto.databinding.FragmentCheckListItemsBinding
 import br.com.mha.checklistauto.ui.items.adapter.CheckListItemAdapter
@@ -24,6 +25,7 @@ class CheckListItemsFragment : Fragment() {
         binding = FragmentCheckListItemsBinding.inflate(inflater, container, false)
         setupListName()
         setupRecyclerView()
+        setupButtons()
         return binding.root
     }
 
@@ -41,6 +43,12 @@ class CheckListItemsFragment : Fragment() {
             checkListItemAdapter = CheckListItemAdapter(requireContext(), items)
             binding.rvCheckListItems.adapter = checkListItemAdapter
             binding.rvCheckListItems.isVisible = true
+        }
+    }
+
+    private fun setupButtons() {
+        binding.btBackToLists.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
