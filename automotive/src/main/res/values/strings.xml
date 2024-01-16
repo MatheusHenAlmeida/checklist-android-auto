@@ -2,8 +2,10 @@
     <string name="app_name">ChecklistAuto</string>
     <string name="lists_screen_title">Lists</string>
     <string name="no_lists_available_label">No lists available. Please click in the add button to add a list.</string>
+    <string name="no_items_available_label">No items available. Please click in the add button to add an item to the list.</string>
     <string name="button_add_list_label" translatable="false">+</string>
     <string name="add_new_list_title">Add New List</string>
+    <string name="add_new_item_title">Add New Item</string>
     <string name="add_new_list_button_label">Add</string>
     <string name="cancel_button_label">Cancel</string>
 </resources>
