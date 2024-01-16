@@ -12,6 +12,7 @@ class SplashActivity : Activity() {
 
         Handler().postDelayed({
             MainActivity.start(this)
+            finish()
         }, DELAY_TO_NAVIGATE_TO_MAIN_SCREEN)
     }
 
