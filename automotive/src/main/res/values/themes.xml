@@ -16,7 +16,7 @@
         <item name="android:elevation">2dp</item>
     </style>
 
-    <style name="ButtonAddNewList" parent="Theme.ChecklistAuto">
+    <style name="ButtonAddNewElement" parent="Theme.ChecklistAuto">
         <item name="android:background">@drawable/ic_button_add_new</item>
         <item name="android:textColor">@android:color/white</item>
     </style>

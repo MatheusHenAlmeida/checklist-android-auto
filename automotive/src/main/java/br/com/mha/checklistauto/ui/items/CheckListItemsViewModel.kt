@@ -8,4 +8,12 @@ class CheckListItemsViewModel(
 ): ViewModel() {
 
     fun getItemsFromList(listId: Int) = checkListRepository.getAllItemsFromCheckList(listId)
+
+    fun addNewItemToList(listId: Int, description: String) {
+        checkListRepository.addNewItem(listId, description)
+    }
+
+    fun updateItemStatus(itemId: Int, isDone: Boolean) {
+        checkListRepository.updateItem(itemId, isDone)
+    }
 }
