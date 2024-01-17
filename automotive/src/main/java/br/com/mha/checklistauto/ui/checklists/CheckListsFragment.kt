@@ -33,13 +33,6 @@ class CheckListsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        val checkLists = viewModel.getAllCheckLists()
-
-        if (checkLists.isNotEmpty()) {
-            binding.tvNoListsAvailableLabel.isVisible = false
-            binding.rvCheckLists.isVisible = true
-        }
-
         checkListAdapter = CheckListsAdapter(
             onCheckListSelectedListener = {
                 val bundle = bundleOf(
@@ -47,17 +40,29 @@ class CheckListsFragment : Fragment() {
                     NAME to it.name
                 )
                 findNavController().navigate(R.id.action_checkListsScreen_to_checkListItemsFragment, bundle)
-            }, checkLists)
+            }, emptyList()
+        )
         binding.rvCheckLists.adapter = checkListAdapter
+
+        updateScreen()
     }
 
     private fun setupAddListButtonAction() {
         binding.btAddList.setOnClickListener {
             AddNewListDialog(onAddNewListListener = {
                 viewModel.addNewList(it)
-                checkListAdapter.update(viewModel.getAllCheckLists())
+                updateScreen()
             }).show(parentFragmentManager, ADD_NEW_LIST_TAG)
         }
+    }
+
+    private fun updateScreen() {
+        val checkLists = viewModel.getAllCheckLists()
+
+        binding.tvNoListsAvailableLabel.isVisible = checkLists.isEmpty()
+        binding.rvCheckLists.isVisible = checkLists.isNotEmpty()
+
+        checkListAdapter.update(checkLists)
     }
 
     companion object {
