@@ -12,19 +12,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import br.com.mha.checklistauto.R
 import br.com.mha.checklistauto.databinding.FragmentCheckListsBinding
+import br.com.mha.checklistauto.sensors.VoiceSensor
 import br.com.mha.checklistauto.ui.checklists.adapters.CheckListsAdapter
 import br.com.mha.checklistauto.ui.checklists.dialogs.AddNewListDialog
 import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.CHECK_LIST_ID
 import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.NAME
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CheckListsFragment : Fragment() {
@@ -32,6 +32,7 @@ class CheckListsFragment : Fragment() {
     private lateinit var binding: FragmentCheckListsBinding
     private lateinit var checkListAdapter: CheckListsAdapter
     private val viewModel: CheckListsViewModel by viewModel()
+    private val voiceSensor: VoiceSensor by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +41,7 @@ class CheckListsFragment : Fragment() {
         binding = FragmentCheckListsBinding.inflate(inflater, container, false)
         setupRecyclerView()
         setupAddListButtonAction()
-        setAudio()
+        setAudioSystem()
         return binding.root
     }
 
@@ -80,52 +81,33 @@ class CheckListsFragment : Fragment() {
         checkListAdapter.update(checkLists)
     }
 
-    private fun setAudio() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            registerForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) {
-
-            }.launch(Manifest.permission.RECORD_AUDIO)
+    private fun setAudioSystem() {
+        if (audioPermissionsAreNotGranted()) {
+            askPermissionToTheUser()
+        } else {
+            startSpeechRecognizer()
         }
+    }
 
-        val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        i.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN")
+    private fun audioPermissionsAreNotGranted() = ContextCompat.checkSelfPermission(
+        requireContext(),
+        Manifest.permission.RECORD_AUDIO
+    ) != PackageManager.PERMISSION_GRANTED
 
-        val recognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
-        recognizer.setRecognitionListener(object : RecognitionListener {
-            override fun onReadyForSpeech(p0: Bundle?) {}
+    private fun askPermissionToTheUser() {
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) {
+            if (it) startSpeechRecognizer()
+        }.launch(Manifest.permission.RECORD_AUDIO)
+    }
 
-            override fun onBeginningOfSpeech() {
-                Log.d("TEST", "Started")
-            }
-
-            override fun onRmsChanged(p0: Float) {}
-
-            override fun onBufferReceived(p0: ByteArray?) {}
-
-            override fun onEndOfSpeech() {}
-
-            override fun onError(p0: Int) {}
-
-            override fun onResults(p0: Bundle?) {
-                val data = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                Log.d("TEST", data?.toString() ?: "")
-            }
-
-            override fun onPartialResults(p0: Bundle?) {}
-
-            override fun onEvent(p0: Int, p1: Bundle?) {}
-
+    private fun startSpeechRecognizer() {
+        voiceSensor.setCallbacks(onStart = {}, onCommandListened = {
+            Log.d("COMMAND", it)
         })
 
-        recognizer.startListening(i)
+        voiceSensor.startListening()
     }
 
     companion object {
