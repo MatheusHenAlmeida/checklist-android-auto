@@ -13,8 +13,8 @@ class CheckListRepository(
         return realm.query<CheckList>().find().toList()
     }
 
-    fun getAllItemsFromCheckList(id: String): List<CheckListItem> {
-        return realm.query<CheckList>("id == $0", id).first().find()?.items ?: emptyList()
+    fun getAllItemsFromCheckList(listId: String): List<CheckListItem> {
+        return realm.query<CheckList>("id == $0", listId).first().find()?.items ?: emptyList()
     }
 
     fun addNewList(listName: String) {
@@ -44,5 +44,9 @@ class CheckListRepository(
                 it.isDone = isDone
             }
         }
+    }
+
+    fun close() {
+        realm.close()
     }
 }
