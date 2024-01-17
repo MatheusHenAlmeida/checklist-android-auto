@@ -8,7 +8,7 @@ import br.com.mha.checklistauto.domain.CheckList
 
 class CheckListsAdapter(
     private val onCheckListSelectedListener: (CheckList) -> Unit,
-    private val checkLists: List<CheckList>
+    private var checkLists: List<CheckList>
 ): RecyclerView.Adapter<CheckListsAdapter.CheckListViewHolder>() {
 
     class CheckListViewHolder(view: CheckListViewLayoutBinding): RecyclerView.ViewHolder(view.root) {
@@ -30,5 +30,10 @@ class CheckListsAdapter(
         holder.binding.clCheckListContainer.setOnClickListener {
             onCheckListSelectedListener.invoke(checkList)
         }
+    }
+
+    fun update(checkLists: List<CheckList>) {
+        this.checkLists = checkLists
+        notifyDataSetChanged()
     }
 }

@@ -2,37 +2,51 @@ package br.com.mha.checklistauto.data
 
 import br.com.mha.checklistauto.domain.CheckList
 import br.com.mha.checklistauto.domain.CheckListItem
+import io.realm.kotlin.Realm
+import io.realm.kotlin.ext.query
 
-class CheckListRepository {
+class CheckListRepository(
+    private val realm: Realm
+) {
 
     fun getAllCheckLists(): List<CheckList> {
-        return listOf(list1, list2, list3)
+        return realm.query<CheckList>().find().toList()
     }
 
-    fun getAllItemsFromCheckList(id: Int): List<CheckListItem> {
-        return listOf(item1, item2, item3)
+    fun getAllItemsFromCheckList(listId: String): List<CheckListItem> {
+        return realm.query<CheckList>("id == $0", listId).first().find()?.items ?: emptyList()
     }
 
     fun addNewList(listName: String) {
-
+        realm.writeBlocking {
+            copyToRealm(CheckList(listName))
+        }
     }
 
-    fun addNewItem(listId: Int, description: String) {
+    fun addNewItem(listId: String, description: String) {
+        val checkList = realm.query<CheckList>("id == $0", listId).first().find() ?: return
 
+        realm.writeBlocking {
+            findLatest(checkList)?.let {
+                it.items.add(CheckListItem(description))
+            }
+        }
     }
 
     fun updateItem(
-        itemId: Int,
+        itemId: String,
         isDone: Boolean
     ) {
+        val item = realm.query<CheckListItem>("id == $0", itemId).first().find() ?: return
 
+        realm.writeBlocking {
+            findLatest(item)?.let {
+                it.isDone = isDone
+            }
+        }
     }
 
-    private val item1 = CheckListItem(1, "Item 1", false)
-    private val item2 = CheckListItem(2, "Item 2", true)
-    private val item3 = CheckListItem(3, "Item 1", false)
-
-    private val list1 = CheckList(1, "List 1", listOf(item1, item2, item3))
-    private val list2 = CheckList(2, "List 2", listOf(item1, item2, item3))
-    private val list3 = CheckList(3, "List 3", listOf(item1, item2, item3))
+    fun close() {
+        realm.close()
+    }
 }

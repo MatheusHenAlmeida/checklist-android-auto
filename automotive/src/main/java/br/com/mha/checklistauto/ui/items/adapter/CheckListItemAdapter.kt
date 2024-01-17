@@ -12,8 +12,8 @@ import br.com.mha.checklistauto.domain.CheckListItem
 
 class CheckListItemAdapter(
     private val context: Context,
-    private val onCheckListItemClickListener: (CheckListItem) -> Unit,
-    private val items: List<CheckListItem>
+    private val onCheckListItemClickListener: (String, Boolean) -> Unit,
+    private var items: List<CheckListItem>
 ) : RecyclerView.Adapter<CheckListItemAdapter.CheckListItemViewHolder>() {
 
     class CheckListItemViewHolder(view: CheckListItemViewLayoutBinding) :
@@ -39,9 +39,12 @@ class CheckListItemAdapter(
         )
         holder.binding.ivDone.setImageDrawable(drawable)
         holder.binding.clCheckListItemContainer.setOnClickListener {
-            onCheckListItemClickListener.invoke(item)
-            //notifyItemChanged(position) // TODO: Test this command
-            notifyDataSetChanged()
+            onCheckListItemClickListener.invoke(item.id, item.isDone)
         }
+    }
+
+    fun update(items: List<CheckListItem>) {
+        this.items = items
+        notifyDataSetChanged()
     }
 }

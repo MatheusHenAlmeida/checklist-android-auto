@@ -20,6 +20,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.closeDB()
+    }
+
     companion object {
 
         fun start(context: Context) {
