@@ -24,7 +24,7 @@ object KoinModules {
     }
 
     val viewModels = module {
-        viewModel { MainViewModel() }
+        viewModel { MainViewModel(get()) }
         viewModel { CheckListsViewModel(get()) }
         viewModel { CheckListItemsViewModel(get()) }
     }
