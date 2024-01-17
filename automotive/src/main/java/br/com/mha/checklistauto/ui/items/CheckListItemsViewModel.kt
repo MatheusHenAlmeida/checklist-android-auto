@@ -7,13 +7,13 @@ class CheckListItemsViewModel(
     private val checkListRepository: CheckListRepository
 ): ViewModel() {
 
-    fun getItemsFromList(listId: Int) = checkListRepository.getAllItemsFromCheckList(listId)
+    fun getItemsFromList(listId: String) = checkListRepository.getAllItemsFromCheckList(listId)
 
-    fun addNewItemToList(listId: Int, description: String) {
+    fun addNewItemToList(listId: String, description: String) {
         checkListRepository.addNewItem(listId, description)
     }
 
-    fun updateItemStatus(itemId: Int, isDone: Boolean) {
+    fun updateItemStatus(itemId: String, isDone: Boolean) {
         checkListRepository.updateItem(itemId, isDone)
     }
 }

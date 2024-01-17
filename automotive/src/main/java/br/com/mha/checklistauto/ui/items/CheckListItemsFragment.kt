@@ -17,6 +17,7 @@ class CheckListItemsFragment : Fragment() {
     private lateinit var binding: FragmentCheckListItemsBinding
     private lateinit var checkListItemAdapter: CheckListItemAdapter
     private val viewModel: CheckListItemsViewModel by viewModel()
+    private var checkListId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,6 +25,7 @@ class CheckListItemsFragment : Fragment() {
     ): View? {
         binding = FragmentCheckListItemsBinding.inflate(inflater, container, false)
         setupListName()
+        updateCheckListIdOnViewModel()
         setupRecyclerView()
         setupButtons()
         return binding.root
@@ -34,25 +36,31 @@ class CheckListItemsFragment : Fragment() {
         binding.tvListNameTitle.text = name
     }
 
+    private fun updateCheckListIdOnViewModel() {
+        checkListId = arguments?.getString(CHECK_LIST_ID) ?: ""
+    }
+
     private fun setupRecyclerView() {
-        val checkListId = arguments?.getInt(CHECK_LIST_ID) ?: -1
         val items = viewModel.getItemsFromList(checkListId)
 
         if (items.isNotEmpty()) {
             binding.tvNoItemsAvailableLabel.isVisible = false
-            checkListItemAdapter = CheckListItemAdapter(requireContext(),
-                onCheckListItemClickListener = {
-                    viewModel.updateItemStatus(it.id, it.isDone.not())
-                }, items)
-            binding.rvCheckListItems.adapter = checkListItemAdapter
+
             binding.rvCheckListItems.isVisible = true
         }
+
+        checkListItemAdapter = CheckListItemAdapter(requireContext(),
+            onCheckListItemClickListener = {
+                viewModel.updateItemStatus(it.id, it.isDone.not())
+            }, items)
+        binding.rvCheckListItems.adapter = checkListItemAdapter
     }
 
     private fun setupButtons() {
         binding.btAddItem.setOnClickListener {
             AddNewItemDialog(onAddNewItemListener = { description ->
-                viewModel.addNewItemToList(-1, description)
+                viewModel.addNewItemToList(checkListId, description)
+                checkListItemAdapter.update(viewModel.getItemsFromList(checkListId))
             }).show(parentFragmentManager, ADD_NEW_ITEM_TAG)
         }
 

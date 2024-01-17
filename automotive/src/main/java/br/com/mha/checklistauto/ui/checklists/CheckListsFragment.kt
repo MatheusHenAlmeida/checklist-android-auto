@@ -37,23 +37,25 @@ class CheckListsFragment : Fragment() {
 
         if (checkLists.isNotEmpty()) {
             binding.tvNoListsAvailableLabel.isVisible = false
-            checkListAdapter = CheckListsAdapter(
-                onCheckListSelectedListener = {
-                    val bundle = bundleOf(
-                        CHECK_LIST_ID to it.id,
-                        NAME to it.name
-                    )
-                    findNavController().navigate(R.id.action_checkListsScreen_to_checkListItemsFragment, bundle)
-                }, checkLists)
-            binding.rvCheckLists.adapter = checkListAdapter
             binding.rvCheckLists.isVisible = true
         }
+
+        checkListAdapter = CheckListsAdapter(
+            onCheckListSelectedListener = {
+                val bundle = bundleOf(
+                    CHECK_LIST_ID to it.id,
+                    NAME to it.name
+                )
+                findNavController().navigate(R.id.action_checkListsScreen_to_checkListItemsFragment, bundle)
+            }, checkLists)
+        binding.rvCheckLists.adapter = checkListAdapter
     }
 
     private fun setupAddListButtonAction() {
         binding.btAddList.setOnClickListener {
             AddNewListDialog(onAddNewListListener = {
                 viewModel.addNewList(it)
+                checkListAdapter.update(viewModel.getAllCheckLists())
             }).show(parentFragmentManager, ADD_NEW_LIST_TAG)
         }
     }
