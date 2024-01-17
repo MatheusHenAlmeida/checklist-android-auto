@@ -42,8 +42,9 @@ class CheckListItemsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         checkListItemAdapter = CheckListItemAdapter(requireContext(),
-            onCheckListItemClickListener = {
-                viewModel.updateItemStatus(it.id, it.isDone.not())
+            onCheckListItemClickListener = { itemId, isDone ->
+                viewModel.updateItemStatus(itemId, isDone.not())
+                updateScreen()
             }, emptyList()
         )
         binding.rvCheckListItems.adapter = checkListItemAdapter

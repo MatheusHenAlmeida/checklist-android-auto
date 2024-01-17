@@ -37,6 +37,12 @@ class CheckListRepository(
         itemId: String,
         isDone: Boolean
     ) {
+        val item = realm.query<CheckListItem>("id == $0", itemId).first().find() ?: return
 
+        realm.writeBlocking {
+            findLatest(item)?.let {
+                it.isDone = isDone
+            }
+        }
     }
 }
