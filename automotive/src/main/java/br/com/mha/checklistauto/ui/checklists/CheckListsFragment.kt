@@ -42,6 +42,7 @@ class CheckListsFragment : Fragment() {
         setupRecyclerView()
         setupAddListButtonAction()
         setAudioSystem()
+        setupStartToListenButton()
         return binding.root
     }
 
@@ -105,9 +106,9 @@ class CheckListsFragment : Fragment() {
     private fun startSpeechRecognizer() {
         voiceSensor.setCallbacks(onStart = {}, onCommandListened = {
             processCommand(it)
+        }, onComplete = {
+            setBtStartToListenStatus(false)
         })
-
-        voiceSensor.startListening()
     }
 
     private fun processCommand(command: String) {
@@ -120,6 +121,20 @@ class CheckListsFragment : Fragment() {
         }
 
         Log.d("COMMAND", message)
+    }
+
+    private fun setupStartToListenButton() {
+        binding.btStartToListen.setOnClickListener {
+            if (audioPermissionsAreNotGranted().not()) {
+                voiceSensor.startListening()
+                setBtStartToListenStatus(true)
+            }
+        }
+    }
+
+    private fun setBtStartToListenStatus(isListening: Boolean) {
+        val color = if (isListening) android.R.color.holo_red_dark else android.R.color.darker_gray
+        binding.btStartToListen.backgroundTintList = ContextCompat.getColorStateList(requireContext(), color)
     }
 
     companion object {

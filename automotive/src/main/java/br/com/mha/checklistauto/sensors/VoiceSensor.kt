@@ -16,7 +16,8 @@ class VoiceSensor(
 
     fun setCallbacks(
         onStart: () -> Unit,
-        onCommandListened: (String) -> Unit
+        onCommandListened: (String) -> Unit,
+        onComplete: () -> Unit
     ) {
         speechRecognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(p0: Bundle?) {}
@@ -29,13 +30,18 @@ class VoiceSensor(
 
             override fun onBufferReceived(p0: ByteArray?) {}
 
-            override fun onEndOfSpeech() {}
+            override fun onEndOfSpeech() {
+                onComplete.invoke()
+            }
 
-            override fun onError(p0: Int) {}
+            override fun onError(p0: Int) {
+                onComplete.invoke()
+            }
 
             override fun onResults(p0: Bundle?) {
                 val data = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 onCommandListened.invoke(data?.joinToString() ?: "")
+                onComplete.invoke()
             }
 
             override fun onPartialResults(p0: Bundle?) {}
