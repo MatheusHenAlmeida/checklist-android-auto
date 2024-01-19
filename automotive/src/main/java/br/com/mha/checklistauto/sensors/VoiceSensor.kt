@@ -8,6 +8,7 @@ import android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL
 import android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
 import android.speech.RecognizerIntent.EXTRA_PARTIAL_RESULTS
 import android.speech.RecognizerIntent.EXTRA_LANGUAGE
+import android.speech.RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH
 import android.speech.SpeechRecognizer
 
 class VoiceSensor(
@@ -47,7 +48,7 @@ class VoiceSensor(
 
     fun startListening() {
         val recognzerIntent = Intent(ACTION_RECOGNIZE_SPEECH)
-        recognzerIntent.putExtra(EXTRA_LANGUAGE_MODEL, LANGUAGE_MODEL_FREE_FORM)
+        recognzerIntent.putExtra(EXTRA_LANGUAGE_MODEL, LANGUAGE_MODEL_WEB_SEARCH)
         recognzerIntent.putExtra(EXTRA_PARTIAL_RESULTS, false)
         recognzerIntent.putExtra(EXTRA_LANGUAGE, "en-IN")
 

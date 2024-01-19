@@ -104,10 +104,22 @@ class CheckListsFragment : Fragment() {
 
     private fun startSpeechRecognizer() {
         voiceSensor.setCallbacks(onStart = {}, onCommandListened = {
-            Log.d("COMMAND", it)
+            processCommand(it)
         })
 
         voiceSensor.startListening()
+    }
+
+    private fun processCommand(command: String) {
+        var message = ""
+        when(command.lowercase()) {
+            "read lists" -> message = "Ler tudo"
+            "open list" -> message = "Abrir lista"
+            "delete list" -> message = "Apagar lista"
+            "create list" -> message = "criar lista"
+        }
+
+        Log.d("COMMAND", message)
     }
 
     companion object {
