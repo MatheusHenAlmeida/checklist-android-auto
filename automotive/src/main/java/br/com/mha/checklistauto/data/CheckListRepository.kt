@@ -13,6 +13,20 @@ class CheckListRepository(
         return realm.query<CheckList>().find().toList()
     }
 
+    fun getCheckListByName(listName: String): CheckList? {
+        return realm.query<CheckList>("name ==[c] $0", listName).first().find()
+    }
+
+    fun deleteCheckListByName(listName: String) {
+        getCheckListByName(listName)?.let { checkList ->
+            realm.writeBlocking {
+                findLatest(checkList)?.let {
+                    delete(it)
+                }
+            }
+        }
+    }
+
     fun getAllItemsFromCheckList(listId: String): List<CheckListItem> {
         return realm.query<CheckList>("id == $0", listId).first().find()?.items ?: emptyList()
     }

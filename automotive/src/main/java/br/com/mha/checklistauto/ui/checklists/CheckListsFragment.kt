@@ -18,7 +18,13 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import br.com.mha.checklistauto.R
+import br.com.mha.checklistauto.commands.CreateListCommand
+import br.com.mha.checklistauto.commands.DeleteListCommand
+import br.com.mha.checklistauto.commands.ErrorMessageCommand
+import br.com.mha.checklistauto.commands.OpenListCommand
+import br.com.mha.checklistauto.commands.ReadAllListsCommand
 import br.com.mha.checklistauto.databinding.FragmentCheckListsBinding
+import br.com.mha.checklistauto.domain.CheckList
 import br.com.mha.checklistauto.sensors.VoiceSensor
 import br.com.mha.checklistauto.ui.checklists.adapters.CheckListsAdapter
 import br.com.mha.checklistauto.ui.checklists.dialogs.AddNewListDialog
@@ -50,14 +56,7 @@ class CheckListsFragment : Fragment() {
     private fun setupRecyclerView() {
         checkListAdapter = CheckListsAdapter(
             onCheckListSelectedListener = {
-                val bundle = bundleOf(
-                    CHECK_LIST_ID to it.id,
-                    NAME to it.name
-                )
-                findNavController().navigate(
-                    R.id.action_checkListsScreen_to_checkListItemsFragment,
-                    bundle
-                )
+                goToItemsScreen(it)
             }, emptyList()
         )
         binding.rvCheckLists.adapter = checkListAdapter
@@ -113,15 +112,25 @@ class CheckListsFragment : Fragment() {
     }
 
     private fun processCommand(command: String) {
-        var message = "Sorry, I can not understand you"
-        when(command.lowercase()) {
-            "read lists" -> message = "Reading all lists"
-            "open list" -> message = "Opening the list"
-            "delete list" -> message = "Deleting list"
-            "create list" -> message = "Creating list"
-        }
+        val errorMessageCommand = ErrorMessageCommand(voiceSensor)
+        val readAllListsCommand = ReadAllListsCommand(
+            viewModel.getAllCheckLists(), voiceSensor, errorMessageCommand
+        )
+        val createListCommand = CreateListCommand({
+            viewModel.addNewList(it)
+            updateScreen()
+        }, readAllListsCommand)
+        val openListCommand = OpenListCommand({ listName ->
+            viewModel.getListByName(listName)?.let {
+                goToItemsScreen(it)
+            }
+        }, createListCommand)
+        val deleteListCommand = DeleteListCommand({
+            viewModel.deleteList(it)
+            updateScreen()
+        }, openListCommand)
 
-        voiceSensor.speech(message)
+        deleteListCommand.evaluate(command)
     }
 
     private fun setupStartToListenButton() {
@@ -135,7 +144,19 @@ class CheckListsFragment : Fragment() {
 
     private fun setBtStartToListenStatus(isListening: Boolean) {
         val color = if (isListening) android.R.color.holo_red_dark else android.R.color.darker_gray
-        binding.btStartToListen.backgroundTintList = ContextCompat.getColorStateList(requireContext(), color)
+        binding.btStartToListen.backgroundTintList =
+            ContextCompat.getColorStateList(requireContext(), color)
+    }
+
+    private fun goToItemsScreen(checkList: CheckList) {
+        val bundle = bundleOf(
+            CHECK_LIST_ID to checkList.id,
+            NAME to checkList.name
+        )
+        findNavController().navigate(
+            R.id.action_checkListsScreen_to_checkListItemsFragment,
+            bundle
+        )
     }
 
     companion object {
