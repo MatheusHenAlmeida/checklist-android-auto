@@ -16,10 +16,14 @@ class ReadAllListsCommand(
     }
 
     override fun evaluate(command: String) {
-        if (command.lowercase().startsWith("read lists")) {
+        if (command.lowercase().startsWith(PREFIX)) {
             readLists()
         } else {
             nextCommandToBeEvaluated.evaluate(command)
         }
+    }
+
+    private companion object {
+        const val PREFIX = "read lists"
     }
 }

@@ -6,11 +6,15 @@ class CreateListCommand(
 ): Command {
 
     override fun evaluate(command: String) {
-        if (command.lowercase().startsWith("create list")) {
-            val listName = command.replace("create list ", "")
+        if (command.lowercase().startsWith(PREFIX)) {
+            val listName = command.replace("$PREFIX ", "")
             createListAction.invoke(listName)
         } else {
             nextCommandToBeEvaluated.evaluate(command)
         }
+    }
+
+    private companion object {
+        const val PREFIX = "create list"
     }
 }

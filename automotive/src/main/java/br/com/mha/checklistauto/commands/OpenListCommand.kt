@@ -6,11 +6,15 @@ class OpenListCommand(
 ): Command {
 
     override fun evaluate(command: String) {
-        if (command.lowercase().startsWith("open list")) {
-            val listName = command.replace("open list ", "")
+        if (command.lowercase().startsWith(PREFIX)) {
+            val listName = command.replace("$PREFIX ", "")
             goToItemsScreen.invoke(listName)
         } else {
             nextCommandToBeEvaluated.evaluate(command)
         }
+    }
+
+    private companion object {
+        const val PREFIX = "open list"
     }
 }
