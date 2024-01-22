@@ -9,9 +9,12 @@ import android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
 import android.speech.RecognizerIntent.EXTRA_PARTIAL_RESULTS
 import android.speech.RecognizerIntent.EXTRA_LANGUAGE
 import android.speech.SpeechRecognizer
+import android.speech.tts.TextToSpeech
+import java.util.Locale
 
 class VoiceSensor(
-    private val speechRecognizer: SpeechRecognizer
+    private val speechRecognizer: SpeechRecognizer,
+    private val textToSpeech: TextToSpeech
 ) {
 
     fun setCallbacks(
@@ -58,5 +61,10 @@ class VoiceSensor(
         recognizerIntent.putExtra(EXTRA_LANGUAGE, "en-IN")
 
         speechRecognizer.startListening(recognizerIntent)
+    }
+
+    fun speech(message: String) {
+        textToSpeech.setLanguage(Locale.US)
+        textToSpeech.speak(message, TextToSpeech.QUEUE_ADD, null)
     }
 }

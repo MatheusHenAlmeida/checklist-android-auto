@@ -26,6 +26,7 @@ import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.CHECK_
 import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.NAME
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Locale
 
 class CheckListsFragment : Fragment() {
 
@@ -112,15 +113,15 @@ class CheckListsFragment : Fragment() {
     }
 
     private fun processCommand(command: String) {
-        var message = ""
+        var message = "Sorry, I can not understand you"
         when(command.lowercase()) {
-            "read lists" -> message = "Ler tudo"
-            "open list" -> message = "Abrir lista"
-            "delete list" -> message = "Apagar lista"
-            "create list" -> message = "criar lista"
+            "read lists" -> message = "Reading all lists"
+            "open list" -> message = "Opening the list"
+            "delete list" -> message = "Deleting list"
+            "create list" -> message = "Creating list"
         }
 
-        Log.d("COMMAND", message)
+        voiceSensor.speech(message)
     }
 
     private fun setupStartToListenButton() {

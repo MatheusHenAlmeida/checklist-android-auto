@@ -1,6 +1,7 @@
 package br.com.mha.checklistauto.di
 
 import android.speech.SpeechRecognizer
+import android.speech.tts.TextToSpeech
 import br.com.mha.checklistauto.data.CheckListRepository
 import br.com.mha.checklistauto.domain.CheckList
 import br.com.mha.checklistauto.domain.CheckListItem
@@ -23,10 +24,11 @@ object KoinModules {
         factory {
             SpeechRecognizer.createSpeechRecognizer(androidContext())
         }
+        factory { TextToSpeech(androidContext()) {} }
     }
 
     val sensors = module {
-        factory { VoiceSensor(get()) }
+        factory { VoiceSensor(get(), get()) }
     }
 
     val repositories = module {
