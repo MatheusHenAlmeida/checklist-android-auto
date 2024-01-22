@@ -1,18 +1,9 @@
 package br.com.mha.checklistauto.ui.checklists
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -25,21 +16,18 @@ import br.com.mha.checklistauto.commands.OpenListCommand
 import br.com.mha.checklistauto.commands.ReadAllListsCommand
 import br.com.mha.checklistauto.databinding.FragmentCheckListsBinding
 import br.com.mha.checklistauto.domain.CheckList
-import br.com.mha.checklistauto.sensors.VoiceSensor
+import br.com.mha.checklistauto.ui.BaseFragment
 import br.com.mha.checklistauto.ui.checklists.adapters.CheckListsAdapter
 import br.com.mha.checklistauto.ui.checklists.dialogs.AddNewListDialog
 import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.CHECK_LIST_ID
 import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.NAME
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
 
-class CheckListsFragment : Fragment() {
+class CheckListsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentCheckListsBinding
     private lateinit var checkListAdapter: CheckListsAdapter
     private val viewModel: CheckListsViewModel by viewModel()
-    private val voiceSensor: VoiceSensor by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,8 +36,8 @@ class CheckListsFragment : Fragment() {
         binding = FragmentCheckListsBinding.inflate(inflater, container, false)
         setupRecyclerView()
         setupAddListButtonAction()
-        setAudioSystem()
         setupStartToListenButton()
+        super.onCreateView(inflater, container, savedInstanceState)
         return binding.root
     }
 
@@ -82,28 +70,7 @@ class CheckListsFragment : Fragment() {
         checkListAdapter.update(checkLists)
     }
 
-    private fun setAudioSystem() {
-        if (audioPermissionsAreNotGranted()) {
-            askPermissionToTheUser()
-        } else {
-            startSpeechRecognizer()
-        }
-    }
-
-    private fun audioPermissionsAreNotGranted() = ContextCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.RECORD_AUDIO
-    ) != PackageManager.PERMISSION_GRANTED
-
-    private fun askPermissionToTheUser() {
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) {
-            if (it) startSpeechRecognizer()
-        }.launch(Manifest.permission.RECORD_AUDIO)
-    }
-
-    private fun startSpeechRecognizer() {
+    override fun startSpeechRecognizer() {
         voiceSensor.setCallbacks(onStart = {}, onCommandListened = {
             processCommand(it)
         }, onComplete = {
