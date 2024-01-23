@@ -12,6 +12,7 @@ import br.com.mha.checklistauto.commands.DeleteItemCommand
 import br.com.mha.checklistauto.commands.ErrorMessageCommand
 import br.com.mha.checklistauto.commands.MarkItemCommand
 import br.com.mha.checklistauto.commands.ReadItemsCommand
+import br.com.mha.checklistauto.commands.ReturnToMainScreenCommand
 import br.com.mha.checklistauto.databinding.FragmentCheckListItemsBinding
 import br.com.mha.checklistauto.ui.BaseFragment
 import br.com.mha.checklistauto.ui.items.adapter.CheckListItemAdapter
@@ -76,7 +77,7 @@ class CheckListItemsFragment : BaseFragment() {
         }
 
         binding.btBackToLists.setOnClickListener {
-            findNavController().popBackStack()
+            goBackToMainScreen()
         }
     }
 
@@ -116,8 +117,11 @@ class CheckListItemsFragment : BaseFragment() {
             viewModel.toggleItemStatusByDescription(it)
             updateScreen()
         }, deleteItemCommand)
+        val returnToMainScreenCommand = ReturnToMainScreenCommand({
+            goBackToMainScreen()
+        }, markItemCommand)
 
-        markItemCommand.evaluate(command)
+        returnToMainScreenCommand.evaluate(command)
     }
 
     private fun setBtStartToListenStatus(isListening: Boolean) {
@@ -125,6 +129,8 @@ class CheckListItemsFragment : BaseFragment() {
         binding.btStartToListen.backgroundTintList =
             ContextCompat.getColorStateList(requireContext(), color)
     }
+
+    private fun goBackToMainScreen() = findNavController().popBackStack()
 
     companion object {
         const val CHECK_LIST_ID = "CHECK_LIST_ID"
