@@ -86,15 +86,18 @@ class CheckListsFragment : BaseFragment() {
         val createListCommand = CreateListCommand({
             viewModel.addNewList(it)
             updateScreen()
+            voiceSensor.speech("List $it created!")
         }, readAllListsCommand)
         val openListCommand = OpenListCommand({ listName ->
             viewModel.getListByName(listName)?.let {
+                voiceSensor.speech("Opening list ${it.name}")
                 goToItemsScreen(it)
             }
         }, createListCommand)
         val deleteListCommand = DeleteListCommand({
             viewModel.deleteList(it)
             updateScreen()
+            voiceSensor.speech("List $it deleted!")
         }, openListCommand)
 
         deleteListCommand.evaluate(command)
