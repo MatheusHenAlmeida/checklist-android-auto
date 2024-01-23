@@ -103,9 +103,18 @@ class CheckListsFragment : BaseFragment() {
     private fun setupStartToListenButton() {
         binding.btStartToListen.setOnClickListener {
             if (audioPermissionsAreNotGranted().not()) {
-                voiceSensor.startListening()
-                setBtStartToListenStatus(true)
+                toggleVoiceSensor()
             }
+        }
+    }
+
+    private fun toggleVoiceSensor() {
+        if (voiceSensor.isListening) {
+            voiceSensor.stopListening()
+            setBtStartToListenStatus(false)
+        } else {
+            voiceSensor.startListening()
+            setBtStartToListenStatus(true)
         }
     }
 

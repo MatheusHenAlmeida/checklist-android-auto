@@ -16,6 +16,7 @@ class VoiceSensor(
     private val speechRecognizer: SpeechRecognizer,
     private val textToSpeech: TextToSpeech
 ) {
+    var isListening = false
 
     fun setCallbacks(
         onStart: () -> Unit,
@@ -34,16 +35,19 @@ class VoiceSensor(
             override fun onBufferReceived(p0: ByteArray?) {}
 
             override fun onEndOfSpeech() {
+                isListening = false
                 onComplete.invoke()
             }
 
             override fun onError(p0: Int) {
+                isListening = false
                 onComplete.invoke()
             }
 
             override fun onResults(p0: Bundle?) {
                 val data = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                 onCommandListened.invoke(data?.joinToString() ?: "")
+                isListening = false
                 onComplete.invoke()
             }
 
@@ -60,7 +64,13 @@ class VoiceSensor(
         recognizerIntent.putExtra(EXTRA_PARTIAL_RESULTS, false)
         recognizerIntent.putExtra(EXTRA_LANGUAGE, "en-IN")
 
+        isListening = true
         speechRecognizer.startListening(recognizerIntent)
+    }
+
+    fun stopListening() {
+        isListening = false
+        speechRecognizer.stopListening()
     }
 
     fun speech(message: String) {
