@@ -4,15 +4,24 @@
 
     <style name="ButtonAddList" parent="Theme.ChecklistAuto">
         <item name="android:background">@drawable/oval_button_background</item>
-        <item name="android:layout_width">@dimen/bt_add_list_size</item>
-        <item name="android:layout_height">@dimen/bt_add_list_size</item>
+        <item name="android:layout_width">@dimen/bt_big_size</item>
+        <item name="android:layout_height">@dimen/bt_big_size</item>
         <item name="android:elevation">2dp</item>
     </style>
 
     <style name="ButtonBackToLists" parent="Theme.ChecklistAuto">
-        <item name="android:background">@drawable/back_button_background</item>
-        <item name="android:layout_width">@dimen/bt_add_list_size</item>
-        <item name="android:layout_height">@dimen/bt_add_list_size</item>
+        <item name="android:background">@drawable/oval_button_background</item>
+        <item name="android:layout_width">@dimen/bt_big_size</item>
+        <item name="android:layout_height">@dimen/bt_big_size</item>
+        <item name="android:backgroundTint">@android:color/holo_red_dark</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="ButtonMicrophone" parent="Theme.ChecklistAuto">
+        <item name="android:background">@drawable/oval_button_background</item>
+        <item name="android:layout_width">@dimen/bt_small_size</item>
+        <item name="android:layout_height">@dimen/bt_small_size</item>
+        <item name="android:backgroundTint">@android:color/darker_gray</item>
         <item name="android:elevation">2dp</item>
     </style>
 

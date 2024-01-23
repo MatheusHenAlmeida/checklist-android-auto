@@ -5,6 +5,8 @@
         android:name="android.hardware.type.automotive"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:name=".CheckListAutoApplication"
         android:allowBackup="true"

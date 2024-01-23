@@ -20,6 +20,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/btStartToListen"
+        style="@style/ButtonMicrophone"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Start to listen"
+        android:src="@drawable/baseline_mic_24"
+        android:scaleType="centerInside"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@android:color/white" />
+
     <TextView
         android:id="@+id/tvNoListsAvailableLabel"
         android:layout_width="wrap_content"

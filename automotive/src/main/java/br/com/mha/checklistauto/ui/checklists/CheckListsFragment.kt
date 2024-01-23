@@ -1,22 +1,29 @@
 package br.com.mha.checklistauto.ui.checklists
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import br.com.mha.checklistauto.R
+import br.com.mha.checklistauto.commands.CreateListCommand
+import br.com.mha.checklistauto.commands.DeleteListCommand
+import br.com.mha.checklistauto.commands.ErrorMessageCommand
+import br.com.mha.checklistauto.commands.OpenListCommand
+import br.com.mha.checklistauto.commands.ReadAllListsCommand
 import br.com.mha.checklistauto.databinding.FragmentCheckListsBinding
+import br.com.mha.checklistauto.domain.CheckList
+import br.com.mha.checklistauto.ui.BaseFragment
 import br.com.mha.checklistauto.ui.checklists.adapters.CheckListsAdapter
 import br.com.mha.checklistauto.ui.checklists.dialogs.AddNewListDialog
 import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.CHECK_LIST_ID
 import br.com.mha.checklistauto.ui.items.CheckListItemsFragment.Companion.NAME
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CheckListsFragment : Fragment() {
+class CheckListsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentCheckListsBinding
     private lateinit var checkListAdapter: CheckListsAdapter
@@ -29,17 +36,15 @@ class CheckListsFragment : Fragment() {
         binding = FragmentCheckListsBinding.inflate(inflater, container, false)
         setupRecyclerView()
         setupAddListButtonAction()
+        setupStartToListenButton()
+        super.onCreateView(inflater, container, savedInstanceState)
         return binding.root
     }
 
     private fun setupRecyclerView() {
         checkListAdapter = CheckListsAdapter(
             onCheckListSelectedListener = {
-                val bundle = bundleOf(
-                    CHECK_LIST_ID to it.id,
-                    NAME to it.name
-                )
-                findNavController().navigate(R.id.action_checkListsScreen_to_checkListItemsFragment, bundle)
+                goToItemsScreen(it)
             }, emptyList()
         )
         binding.rvCheckLists.adapter = checkListAdapter
@@ -63,6 +68,74 @@ class CheckListsFragment : Fragment() {
         binding.rvCheckLists.isVisible = checkLists.isNotEmpty()
 
         checkListAdapter.update(checkLists)
+    }
+
+    override fun startSpeechRecognizer() {
+        voiceSensor.setCallbacks(onStart = {}, onCommandListened = {
+            processCommand(it)
+        }, onComplete = {
+            setBtStartToListenStatus(false)
+        })
+    }
+
+    private fun processCommand(command: String) {
+        val errorMessageCommand = ErrorMessageCommand(voiceSensor)
+        val readAllListsCommand = ReadAllListsCommand(
+            viewModel.getAllCheckLists(), voiceSensor, errorMessageCommand
+        )
+        val createListCommand = CreateListCommand({
+            viewModel.addNewList(it)
+            updateScreen()
+            voiceSensor.speech("List $it created!")
+        }, readAllListsCommand)
+        val openListCommand = OpenListCommand({ listName ->
+            viewModel.getListByName(listName)?.let {
+                voiceSensor.speech("Opening list ${it.name}")
+                goToItemsScreen(it)
+            }
+        }, createListCommand)
+        val deleteListCommand = DeleteListCommand({
+            viewModel.deleteList(it)
+            updateScreen()
+            voiceSensor.speech("List $it deleted!")
+        }, openListCommand)
+
+        deleteListCommand.evaluate(command)
+    }
+
+    private fun setupStartToListenButton() {
+        binding.btStartToListen.setOnClickListener {
+            if (audioPermissionsAreNotGranted().not()) {
+                toggleVoiceSensor()
+            }
+        }
+    }
+
+    private fun toggleVoiceSensor() {
+        if (voiceSensor.isListening) {
+            voiceSensor.stopListening()
+            setBtStartToListenStatus(false)
+        } else {
+            voiceSensor.startListening()
+            setBtStartToListenStatus(true)
+        }
+    }
+
+    private fun setBtStartToListenStatus(isListening: Boolean) {
+        val color = if (isListening) android.R.color.holo_red_dark else android.R.color.darker_gray
+        binding.btStartToListen.backgroundTintList =
+            ContextCompat.getColorStateList(requireContext(), color)
+    }
+
+    private fun goToItemsScreen(checkList: CheckList) {
+        val bundle = bundleOf(
+            CHECK_LIST_ID to checkList.id,
+            NAME to checkList.name
+        )
+        findNavController().navigate(
+            R.id.action_checkListsScreen_to_checkListItemsFragment,
+            bundle
+        )
     }
 
     companion object {
