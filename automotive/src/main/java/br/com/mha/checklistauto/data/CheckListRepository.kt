@@ -31,6 +31,10 @@ class CheckListRepository(
         return realm.query<CheckList>("id == $0", listId).first().find()?.items ?: emptyList()
     }
 
+    fun getItemFromCheckListByDescription(description: String): CheckListItem? {
+        return realm.query<CheckListItem>("description ==[c] $0", description).first().find()
+    }
+
     fun addNewList(listName: String) {
         realm.writeBlocking {
             copyToRealm(CheckList(listName))
@@ -56,6 +60,16 @@ class CheckListRepository(
         realm.writeBlocking {
             findLatest(item)?.let {
                 it.isDone = isDone
+            }
+        }
+    }
+
+    fun deleteItemByDescription(description: String) {
+        getItemFromCheckListByDescription(description)?.let { item ->
+            realm.writeBlocking {
+                findLatest(item)?.let {
+                    delete(it)
+                }
             }
         }
     }

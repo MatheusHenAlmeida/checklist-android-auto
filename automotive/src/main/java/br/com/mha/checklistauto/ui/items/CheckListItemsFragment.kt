@@ -4,22 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import br.com.mha.checklistauto.commands.CreateItemCommand
+import br.com.mha.checklistauto.commands.DeleteItemCommand
+import br.com.mha.checklistauto.commands.ErrorMessageCommand
+import br.com.mha.checklistauto.commands.MarkItemCommand
+import br.com.mha.checklistauto.commands.ReadItemsCommand
 import br.com.mha.checklistauto.databinding.FragmentCheckListItemsBinding
-import br.com.mha.checklistauto.sensors.VoiceSensor
+import br.com.mha.checklistauto.ui.BaseFragment
 import br.com.mha.checklistauto.ui.items.adapter.CheckListItemAdapter
 import br.com.mha.checklistauto.ui.items.dialogs.AddNewItemDialog
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CheckListItemsFragment : Fragment() {
+class CheckListItemsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentCheckListItemsBinding
     private lateinit var checkListItemAdapter: CheckListItemAdapter
     private val viewModel: CheckListItemsViewModel by viewModel()
-    private val voiceSensor: VoiceSensor by inject()
     private var checkListId = ""
 
     override fun onCreateView(
@@ -31,6 +34,7 @@ class CheckListItemsFragment : Fragment() {
         updateCheckListIdOnViewModel()
         setupRecyclerView()
         setupButtons()
+        super.onCreateView(inflater, container, savedInstanceState)
         return binding.root
     }
 
@@ -44,7 +48,8 @@ class CheckListItemsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        checkListItemAdapter = CheckListItemAdapter(requireContext(),
+        checkListItemAdapter = CheckListItemAdapter(
+            requireContext(),
             onCheckListItemClickListener = { itemId, isDone ->
                 viewModel.updateItemStatus(itemId, isDone.not())
                 updateScreen()
@@ -63,6 +68,13 @@ class CheckListItemsFragment : Fragment() {
             }).show(parentFragmentManager, ADD_NEW_ITEM_TAG)
         }
 
+        binding.btStartToListen.setOnClickListener {
+            if (audioPermissionsAreNotGranted().not()) {
+                voiceSensor.startListening()
+                setBtStartToListenStatus(true)
+            }
+        }
+
         binding.btBackToLists.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -75,6 +87,43 @@ class CheckListItemsFragment : Fragment() {
         binding.rvCheckListItems.isVisible = items.isNotEmpty()
 
         checkListItemAdapter.update(items)
+    }
+
+    override fun startSpeechRecognizer() {
+        voiceSensor.setCallbacks(onStart = {}, onCommandListened = {
+            processCommand(it)
+        }, onComplete = {
+            setBtStartToListenStatus(false)
+        })
+    }
+
+    private fun processCommand(command: String) {
+        val errorMessageCommand = ErrorMessageCommand(voiceSensor)
+        val readItemsCommand = ReadItemsCommand(
+            viewModel.getItemsFromList(checkListId),
+            voiceSensor,
+            errorMessageCommand
+        )
+        val createItemCommand = CreateItemCommand({
+            viewModel.addNewItemToList(checkListId, it)
+            updateScreen()
+        }, readItemsCommand)
+        val deleteItemCommand = DeleteItemCommand({
+            viewModel.deleteItemByDescription(it)
+            updateScreen()
+        }, createItemCommand)
+        val markItemCommand = MarkItemCommand({
+            viewModel.toggleItemStatusByDescription(it)
+            updateScreen()
+        }, deleteItemCommand)
+
+        markItemCommand.evaluate(command)
+    }
+
+    private fun setBtStartToListenStatus(isListening: Boolean) {
+        val color = if (isListening) android.R.color.holo_red_dark else android.R.color.darker_gray
+        binding.btStartToListen.backgroundTintList =
+            ContextCompat.getColorStateList(requireContext(), color)
     }
 
     companion object {
