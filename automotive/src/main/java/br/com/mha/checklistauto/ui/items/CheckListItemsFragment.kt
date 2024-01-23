@@ -117,16 +117,20 @@ class CheckListItemsFragment : BaseFragment() {
         val createItemCommand = CreateItemCommand({
             viewModel.addNewItemToList(checkListId, it)
             updateScreen()
+            voiceSensor.speech("Item $it created!")
         }, readItemsCommand)
         val deleteItemCommand = DeleteItemCommand({
             viewModel.deleteItemByDescription(it)
             updateScreen()
+            voiceSensor.speech("Item $it deleted!")
         }, createItemCommand)
         val markItemCommand = MarkItemCommand({
             viewModel.toggleItemStatusByDescription(it)
             updateScreen()
+            voiceSensor.speech("Item $it updated!")
         }, deleteItemCommand)
         val returnToMainScreenCommand = ReturnToMainScreenCommand({
+            voiceSensor.speech("Returning to lists screen")
             goBackToMainScreen()
         }, markItemCommand)
 
