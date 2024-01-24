@@ -7,11 +7,11 @@ class MarkItemCommand(
 
     override fun evaluate(command: String) {
         if (command.lowercase().startsWith(CHECK_PREFIX) ||
-            command.lowercase().startsWith(UNCHECK_PREFIX)
+            command.lowercase().startsWith(CHANGE_PREFIX)
             ) {
             val listName = command
                 .replace("$CHECK_PREFIX ", "")
-                .replace("$UNCHECK_PREFIX ", "")
+                .replace("$CHANGE_PREFIX ", "")
             changeItemStatusAction.invoke(listName)
         } else {
             nextCommandToBeEvaluated.evaluate(command)
@@ -20,6 +20,6 @@ class MarkItemCommand(
 
     private companion object {
         const val CHECK_PREFIX = "check item"
-        const val UNCHECK_PREFIX = "uncheck item"
+        const val CHANGE_PREFIX = "change item"
     }
 }
