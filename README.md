@@ -19,7 +19,7 @@ while they are driving through voices commands. To test the voice commands, you 
 ## Screens
 
 Demo Video
-![Demo Video](.attachments/demo_video.mov)
+[![Demo Video](.attachments/demo_video.mov)](.attachments/demo_video.mov)
 <br><br>
 Lists Screen
 ![Lists Screen](.attachments/lists.png)
