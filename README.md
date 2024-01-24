@@ -19,5 +19,6 @@ while they are driving through voices commands.
 ## Screens
 
 // TODO: Insert a demo video<br>
-// TODO: Insert lists screen<br>
-// TODO: Insert items screen
+![Lists Screen](.attachments/lists.png)
+<br><br>
+![Items Screen](.attachments/items.png)
