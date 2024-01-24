@@ -34,6 +34,8 @@ android {
     viewBinding {
         enabled true
     }
+
+    useLibrary 'android.car'
 }
 
 dependencies {
