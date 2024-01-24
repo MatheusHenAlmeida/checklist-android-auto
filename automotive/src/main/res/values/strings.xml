@@ -8,4 +8,5 @@
     <string name="add_new_item_title">Add New Item</string>
     <string name="add_new_list_button_label">Add</string>
     <string name="cancel_button_label">Cancel</string>
+    <string name="welcome_label">Welcome to the ChecklistAuto</string>
 </resources>
