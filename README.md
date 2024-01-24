@@ -19,8 +19,9 @@ while they are driving through voices commands. To test the voice commands, you 
 ## Screens
 
 Demo Video
-![test](https://github.com/MatheusHenAlmeida/checklist-android-auto/blob/feature/small-adjustments/.attachments/demo_video.mov)
-<br><br>
+
+https://github.com/MatheusHenAlmeida/checklist-android-auto/assets/49349048/6f1cd073-a733-4d50-b6ca-154b1e5e683f
+
 Lists Screen
 ![Lists Screen](.attachments/lists.png)
 <br><br>
