@@ -18,6 +18,6 @@ while they are driving through voices commands.
 
 ## Screens
 
-// TODO: Insert a demo video
-// TODO: Insert lists screen
+// TODO: Insert a demo video<br>
+// TODO: Insert lists screen<br>
 // TODO: Insert items screen
