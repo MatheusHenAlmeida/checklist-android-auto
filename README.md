@@ -15,3 +15,9 @@ while they are driving through voices commands.
 | Check/Uncheck item <item_description> | The app will toggle the item status                     |
 | Create item <item_description>        | The app will create a new item in the current list      |
 | Delete item <item_description>        | The app will remove the item                            |
+
+## Screens
+
+// TODO: Insert a demo video
+// TODO: Insert lists screen
+// TODO: Insert items screen
